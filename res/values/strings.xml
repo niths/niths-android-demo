@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="account_manager">Account Manager</string>
     <string name="app_name">NITHs Android demo</string>
+    <string name="authenticate">Authenticate</string>
     <string name="choose_account">Choose account</string>
-    <string name="login">Login</string>
+    <string name="email_error">Error authenticating email</string>
+    <string name="no_nith_email">No NITH email found</string>
+    <string name="transport_error">Transport error</string>
 </resources>

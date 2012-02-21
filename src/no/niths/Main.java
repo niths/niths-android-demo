@@ -1,10 +1,12 @@
 package no.niths;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -19,11 +21,13 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.LauncherActivity;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,10 +43,21 @@ import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountMa
  */
 public class Main extends Activity {
 
-    private GoogleAccessProtectedResource resource =
-            new GoogleAccessProtectedResource(null);
+    private GoogleAccessProtectedResource resource;
+    private GoogleAccountManager googleAccountManager;
     private Account account;
-    private boolean hasAccount;
+
+    /**
+     * Only the very basic information will be retrieved
+     */
+    private final String AUTH_TYPE=
+            "oauth2:https://www.googleapis.com/auth/userinfo.email",
+                SERVER_URL = "http://10.0.2.2:8080/niths/google";
+
+    /**
+     * The form data token field 
+     */
+    private final String TOKEN_FIELD = "token";
 
     /**
      * @param Bundle the bundle which was provided through this method
@@ -51,82 +66,53 @@ public class Main extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
 
-        GoogleAccountManager googleAccountManager =
-                new GoogleAccountManager(this);
-        
-        try {
-            checkAccounts(googleAccountManager.getAccounts());
-        } catch (NoNITHMailFoundException e) {
-            Button btnLogin = (Button) findViewById(R.id.btnLogin);
-            btnLogin.setVisibility(Button.VISIBLE);
-            btnLogin.setOnClickListener(new View.OnClickListener() {
-
-                public void onClick(View view) {
-                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                            "http://almondmendoza.com/android-applications/")));
-                }
-            });
-        }
-        
-        if (true) return;
-
-        final String authType =
-                "oauth2:https://www.googleapis.com/auth/userinfo.email";
-         
-        googleAccountManager.manager.getAuthToken(account, authType, true,
-                new AccountManagerCallback<Bundle>() {
-                    public void run(AccountManagerFuture<Bundle> arg0) {
-                        try {  
-                            resource.setAccessToken(arg0.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                            String token = resource.getAccessToken();
-                            Toast.makeText(Main.this, "token -> " + token, Toast.LENGTH_LONG).show();
-                            Log.i("token:", "" + token);
-
-                            HttpClient client = new DefaultHttpClient();
-                            HttpPost post = new HttpPost(
-                                    "http://10.0.2.2:8080/niths/auth-user-token");
-                            List<NameValuePair> data =
-                                    new ArrayList<NameValuePair>();
-                            data.add(new BasicNameValuePair("token", token));
-                            post.setEntity(new UrlEncodedFormEntity(data));
-                            
-                            org.apache.http.HttpResponse response = client.execute(post);
-                            
-                            
-                            
-                            
-                        } catch (OperationCanceledException e) {
-                            Log.e("errs", e.getMessage());
-                            e.printStackTrace();
-                        } catch (AuthenticatorException e) {
-                            Log.e("errs", e.getMessage());
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            Log.e("errs", e.getMessage());
-                            e.printStackTrace();
-                        }
-                    }
-                }, null);
+        configure();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e("foo", "resume");
-    }
-    
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        Log.e("foo", "restart");
-    }
-    
+    /**
+     * Sets up the handlers
+     */
     private void configure() {
-        
+        setContentView(R.layout.main);
+        resource = new GoogleAccessProtectedResource(null);
+        googleAccountManager = new GoogleAccountManager(this);
+
+        Button btnAccountManager = (Button) findViewById(
+                R.id.btnAccountManager);
+        btnAccountManager.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                launchAccountManager();
+            }
+        });
+
+        Button btnAuthenticate = (Button) findViewById(R.id.btnAuthenticate);
+        btnAuthenticate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                try {
+                    checkAccounts(googleAccountManager.getAccounts());
+                } catch (NoNITHMailFoundException e) {
+                    Log.e(getString(R.string.no_nith_email), e.getMessage());
+                    Toast.makeText(Main.this, e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+                getToken();
+            }
+        });
     }
 
+    /**
+     * Launches Settings -> Accounts & sync
+     */
+    private void launchAccountManager() {
+        startActivity(new Intent(Settings.ACTION_SYNC_SETTINGS));
+    }
+
+    /**
+     * Checks the accounts on the device
+     * @param Account[] The account on the device
+     * @throws NoNITHMailFoundException
+     */
     private  void checkAccounts(Account[] accounts) throws NoNITHMailFoundException {
         ArrayList<Account> nithAccounts = new ArrayList<Account>();
         
@@ -169,9 +155,66 @@ public class Main extends Activity {
         builder.create();
     }
 
-    public OnClickListener o = new OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-            
+    /**
+     * Gets the token from Google
+     */
+    private void getToken() {
+        googleAccountManager.manager.getAuthToken(account, AUTH_TYPE, true,
+                new AccountManagerCallback<Bundle>() {
+                    public void run(AccountManagerFuture<Bundle> future) {
+                            try {
+                                resource.setAccessToken(future.getResult()
+                                        .getString(
+                                                AccountManager.KEY_AUTHTOKEN));
+                            } catch (OperationCanceledException e) {
+                                Log.e(getString(R.string.transport_error),
+                                        e.getMessage());
+                            } catch (AuthenticatorException e) {
+                                Log.e(getString(R.string.transport_error),
+                                        e.getMessage());
+                            } catch (IOException e) {
+                                Log.e(getString(R.string.transport_error),
+                                        e.getMessage());
+                            }
+
+                            final String token = resource.getAccessToken();
+
+                            if (token == null) {
+                                Toast.makeText(Main.this,
+                                        R.string.email_error,
+                                        Toast.LENGTH_LONG).show();
+                            } else {
+                                // TODO Remove ASAP
+                                Log.i("token:", token);
+                                sendToken(token);
+
+                                
+                            }
+
+                    }
+                }, null);
+    }
+
+    /**
+     * Sends the token to the server
+     * @param String the token to be sent
+     */
+    private void sendToken(final String token) {
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost(SERVER_URL);
+        List<NameValuePair> data = new ArrayList<NameValuePair>();
+        data.add(new BasicNameValuePair(TOKEN_FIELD, token)); 
+
+        try {
+            post.setEntity(new UrlEncodedFormEntity(data));
+            client.execute(post);
+
+        } catch (UnsupportedEncodingException e) {
+            Log.e(getString(R.string.transport_error), e.getMessage());
+        } catch (ClientProtocolException e) {
+            Log.e(getString(R.string.transport_error), e.getMessage());
+        } catch (IOException e) {
+            Log.e(getString(R.string.transport_error), e.getMessage());
         }
-    };
+    }
 }
