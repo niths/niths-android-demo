@@ -3,6 +3,7 @@ package no.niths;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -82,7 +83,7 @@ public class Main extends Activity {
                 R.id.btnAccountManager);
         btnAccountManager.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                launchAccountManager();
+                startActivity(new Intent(Settings.ACTION_SYNC_SETTINGS));
             }
         });
 
@@ -90,30 +91,25 @@ public class Main extends Activity {
         btnAuthenticate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 try {
-                    checkAccounts(googleAccountManager.getAccounts());
+                    if (checkAccounts(googleAccountManager.getAccounts())) {
+                        getToken();
+                    }
                 } catch (NoNITHMailFoundException e) {
                     Log.e(getString(R.string.no_nith_email), e.getMessage());
                     Toast.makeText(Main.this, e.getMessage(),
                             Toast.LENGTH_LONG).show();
                 }
-                getToken();
             }
         });
     }
 
     /**
-     * Launches Settings -> Accounts & sync
-     */
-    private void launchAccountManager() {
-        startActivity(new Intent(Settings.ACTION_SYNC_SETTINGS));
-    }
-
-    /**
      * Checks the accounts on the device
      * @param Account[] The account on the device
+     * @return boolean Success
      * @throws NoNITHMailFoundException
      */
-    private  void checkAccounts(Account[] accounts) throws NoNITHMailFoundException {
+    private boolean checkAccounts(Account[] accounts) throws NoNITHMailFoundException {
         ArrayList<Account> nithAccounts = new ArrayList<Account>();
         
         for (Account account : accounts) {
@@ -123,14 +119,18 @@ public class Main extends Activity {
         }
 
         final int size = nithAccounts.size();
+        boolean success = false;
 
         if (size > 1) {
             promptAccount(nithAccounts);
         } else if (size == 1) {
             account = nithAccounts.get(0);
+            success = true;
         } else {
             throw new NoNITHMailFoundException();
         }
+        
+        return success;
     }
 
     /**
@@ -139,7 +139,10 @@ public class Main extends Activity {
      * @return The name which was chosen
      */
     public void promptAccount(final ArrayList<Account> nithAccounts) {
-        final String[] nithAccountNames = (String[]) nithAccounts.toArray();
+        final String [] nithAccountNames = new String[nithAccounts.size()];
+        for (int i = 0; i < nithAccountNames.length; i++) {
+            nithAccountNames[i] =nithAccounts.get(i).name;
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.choose_account);
@@ -148,11 +151,13 @@ public class Main extends Activity {
                 for (String accountName : nithAccountNames) {
                     if (accountName.equals(nithAccountNames[which])) {
                         account = nithAccounts.get(which);
+                        getToken();
                     }
                 }
             }
         });
-        builder.create();
+        builder.create(); 
+        builder.show();
     }
 
     /**
