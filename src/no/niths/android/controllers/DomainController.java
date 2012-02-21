@@ -1,6 +1,5 @@
 package no.niths.android.controllers;
 
-import no.niths.android.config.ServerInfo;
 import no.niths.android.managers.interfaces.Fetchable;
 
 import org.springframework.web.client.RestTemplate;
