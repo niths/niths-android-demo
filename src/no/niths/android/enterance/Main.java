@@ -51,7 +51,7 @@ public class Main extends Activity {
      * Only the very basic information will be retrieved
      */
     private final String AUTH_TYPE=
-            "oauth2:https://www.googleapis.com/auth/userinfo.email",
+            "oauth2:https://www.googleapis.com/auth/userinfo.profile",
 
             /**
              * The URL which will handle the token sent 
@@ -62,6 +62,11 @@ public class Main extends Activity {
      * The form data token field 
      */
     private final String TOKEN_FIELD = "token";
+
+    /**
+     * 
+     */
+    private String token;
 
     /**
      * @param Bundle the bundle which was provided through this method
@@ -167,42 +172,50 @@ public class Main extends Activity {
      */
     private void getToken() {
         googleAccountManager.manager.getAuthToken(account, AUTH_TYPE, true,
-                new AccountManagerCallback<Bundle>() {
-                    public void run(AccountManagerFuture<Bundle> future) {
-                            try {
-                                resource.setAccessToken(future.getResult()
-                                        .getString(
-                                                AccountManager.KEY_AUTHTOKEN));
-                            } catch (OperationCanceledException e) {
-                                Log.e(getString(R.string.transport_error),
-                                        e.getMessage());
-                            } catch (AuthenticatorException e) {
-                                Log.e(getString(R.string.transport_error),
-                                        e.getMessage());
-                            } catch (IOException e) {
-                                Log.e(getString(R.string.transport_error),
-                                        e.getMessage());
-                            }
-
-                            final String token = resource.getAccessToken();
-
-                            if (token == null) {
-                                Toast.makeText(Main.this,
-                                        R.string.email_error,
-                                        Toast.LENGTH_LONG).show();
-                            } else {
-                                // TODO Remove ASAP
-                                Log.i("token:", token);
-
-                                sendToken(token);
-
-                                // Sends the user to the main menu
-                                startActivity(
-                                        new Intent(Main.this, MainMenu.class));
-                            }
-                    }
-                }, null);
+                callback, null);
     }
+
+    /**
+     * Callback when getting a token
+     * TODO Check if the token is valid
+     */
+    private AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
+
+        public void run(AccountManagerFuture<Bundle> future) {
+            try {
+                resource.setAccessToken(future.getResult()
+                        .getString(
+                                AccountManager.KEY_AUTHTOKEN));
+            } catch (OperationCanceledException e) {
+                Log.e(getString(R.string.transport_error),
+                        e.getMessage());
+            } catch (AuthenticatorException e) {
+                Log.e(getString(R.string.transport_error),
+                        e.getMessage());
+            } catch (IOException e) {
+                Log.e(getString(R.string.transport_error),
+                        e.getMessage());
+            }
+
+            token = resource.getAccessToken();
+
+            if (token == null) {
+                Toast.makeText(Main.this,
+                        R.string.email_error,
+                        Toast.LENGTH_LONG).show();
+            } else {
+                // TODO Remove ASAP
+                Log.i("token:", token);
+
+                sendToken(token);
+
+                // Sends the user to the main menu
+                startActivity(
+                        new Intent(Main.this, MainMenu.class));
+            }            
+        }
+        
+    };
 
     /**
      * Sends the token to the server

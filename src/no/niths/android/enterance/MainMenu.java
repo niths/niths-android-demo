@@ -15,7 +15,7 @@ import android.widget.ListView;
  *
  */
 public class MainMenu extends ListActivity {
-    private final String MANAGER_PACKAGE = "no.niths.android.managers";
+    private final String MANAGER_PACKAGE = "no.niths.android.managers.";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

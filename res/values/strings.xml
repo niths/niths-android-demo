@@ -4,6 +4,7 @@
     <string name="app_name">NITHs Android demo</string>
     <string name="authenticate">Authenticate</string>
     <string name="choose_account">Choose account</string>
+    <string name="connection_error">Connection error</string>
     <string name="courses_manager">Courses Manager</string>
     <string name="email_error">
         Error authenticating email, please check your notifications

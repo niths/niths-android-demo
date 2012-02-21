@@ -5,7 +5,9 @@ package no.niths.android.managers.interfaces;
  * @author NITHs
  *
  */
-public interface Fetchable {
+public interface Fetchable<T> {
 
-    void fetchAll();
+    T[] fetchAll();
+
+    void setData(T[] t);
 }
