@@ -14,5 +14,7 @@
 	<classpathentry kind="lib" path="libs/google-oauth-client-1.6.0-beta.jar"/>
 	<classpathentry kind="lib" path="libs/dependencies/guava-r09.jar"/>
 	<classpathentry kind="lib" path="libs/dependencies/gson-1.7.1.jar"/>
+	<classpathentry kind="lib" path="libs/spring-android-rest-template-1.0.0.M2.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-mapper-asl-1.8.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
