@@ -3,7 +3,7 @@ package no.niths.android.domains;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Course extends Domain {
+public class Course {
     public static final String PATH = "/courses";
     
     private Long id;
