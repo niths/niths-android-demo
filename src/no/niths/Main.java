@@ -3,7 +3,6 @@ package no.niths;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -22,8 +21,6 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.LauncherActivity;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -43,7 +40,6 @@ import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountMa
  *
  */
 public class Main extends Activity {
-
     private GoogleAccessProtectedResource resource;
     private GoogleAccountManager googleAccountManager;
     private Account account;
@@ -53,7 +49,11 @@ public class Main extends Activity {
      */
     private final String AUTH_TYPE=
             "oauth2:https://www.googleapis.com/auth/userinfo.email",
-                SERVER_URL = "http://10.0.2.2:8080/niths/google";
+
+            /**
+             * The URL which will handle the token sent 
+             */
+            SERVER_URL = "http://10.0.2.2:8080/niths/google";
 
     /**
      * The form data token field 
@@ -67,7 +67,6 @@ public class Main extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         configure();
     }
 
