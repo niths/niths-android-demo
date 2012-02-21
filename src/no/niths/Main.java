@@ -192,10 +192,7 @@ public class Main extends Activity {
                                 // TODO Remove ASAP
                                 Log.i("token:", token);
                                 sendToken(token);
-
-                                
                             }
-
                     }
                 }, null);
     }
