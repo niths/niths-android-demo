@@ -5,11 +5,12 @@
     <string name="authenticate">Authenticate</string>
     <string name="choose_account">Choose account</string>
     <string name="connection_error">Connection error</string>
-    <string name="courses_manager">Courses Manager</string>
+    <string name="courses_controller">Courses controller</string>
     <string name="email_error">
         Error authenticating email, please check your notifications
     </string>
     <string name="main_menu">Main menu</string>
     <string name="no_nith_email">No NITH email found</string>
+    <string name="students_controller">Students controller</string>
     <string name="transport_error">Transport error</string>
 </resources>

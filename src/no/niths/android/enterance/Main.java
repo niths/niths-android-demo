@@ -51,7 +51,7 @@ public class Main extends Activity {
      * Only the very basic information will be retrieved
      */
     private final String AUTH_TYPE=
-            "oauth2:https://www.googleapis.com/auth/userinfo.profile",
+            "oauth2:https://www.googleapis.com/auth/userinfo.email",
 
             /**
              * The URL which will handle the token sent 
@@ -167,10 +167,21 @@ public class Main extends Activity {
         builder.show();
     }
 
+    private void refreshToken() {
+        try {
+            resource.refreshToken();
+        } catch (IOException e) {
+        }
+        googleAccountManager.invalidateAuthToken(
+                "1/E1hR9cefyH2Kk-yWmo1ViWm9OSmsihiKWbD9r3c3Js4");
+        
+    }
+
     /**
      * Gets the token from Google
      */
     private void getToken() {
+        refreshToken();
         googleAccountManager.manager.getAuthToken(account, AUTH_TYPE, true,
                 callback, null);
     }

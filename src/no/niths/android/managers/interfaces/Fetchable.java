@@ -7,7 +7,10 @@ package no.niths.android.managers.interfaces;
  */
 public interface Fetchable<T> {
 
-    T[] fetchAll();
+    /**
+     * Fetches all of the given domain
+     */
+    void fetchAll();
 
     void setData(T[] t);
 }
