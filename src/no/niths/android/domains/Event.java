@@ -60,4 +60,9 @@ public class Event extends Domain {
     public String getEndTime() {
         return endTime;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

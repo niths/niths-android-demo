@@ -27,7 +27,6 @@ public class Course extends Domain {
         this.name = name;
     }
 
-    @Override
     public String getName() {
         return name;
     }

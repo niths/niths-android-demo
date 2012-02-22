@@ -1,8 +1,5 @@
 package no.niths.android.controllers;
 
-import no.niths.android.controllers.adapters.IndexListAdapter;
-import no.niths.android.controllers.domain_views.IndexAttibuteAdapter;
-
 import org.springframework.web.client.RestTemplate;
 
 import android.app.ListActivity;

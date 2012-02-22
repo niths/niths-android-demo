@@ -39,13 +39,14 @@ public class IndexListAdapter<T extends Domain> extends BaseAdapter {
         if(convertView == null) {
             convertView = inflater.inflate(R.layout.domains_list, null);
             holder = new ViewHolder();
-            holder.lblName = (TextView) convertView.findViewById(R.id.tevDomainHolder);
+            holder.lblName =
+                    (TextView) convertView.findViewById(R.id.tevDomainHolder);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.lblName.setText(list.get(index).getName());
+        holder.lblName.setText(list.get(index).toString());
 
         return convertView;
     }

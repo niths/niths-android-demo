@@ -107,7 +107,8 @@ public class IndexAttibuteAdapter extends BaseAdapter {
             Log.e(String.valueOf(R.string.reflection_error), e.getMessage());
         }
 
-        return result.toString();
+        String value = result.toString();
+        return value == null ? "null" : value;
     }
 
     static class ViewHolder {

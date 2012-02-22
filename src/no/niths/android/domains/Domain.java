@@ -15,8 +15,4 @@ public abstract class Domain implements Serializable {
     public Long getId() {
         return id;
     }
-
-    public String getName() {
-        return name;
-    }
 }

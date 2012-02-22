@@ -33,6 +33,8 @@
         <activity
             android:name=".controllers.domain_views.EventView"/>
         <activity
-            android:name=".controllers.StudentsController"/>
+            android:name=".controllers.StudentsList"/>
+        <activity
+            android:name=".controllers.domain_views.StudentView"/>
     </application>
 </manifest>
