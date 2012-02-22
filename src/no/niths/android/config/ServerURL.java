@@ -15,7 +15,7 @@ public enum ServerURL {
     /**
      * URL for connecting through the genuine server
      */
-    NITHS_URL("");
+    NITHS_URL("http://ec2-46-137-44-111.eu-west-1.compute.amazonaws.com:8181/niths/");
 
     private String data;
 

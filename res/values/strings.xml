@@ -12,6 +12,7 @@
     <string name="information">Information</string>
     <string name="main_menu">Main menu</string>
     <string name="no_nith_email">No NITH email found</string>
+    <string name="reflection_error">Reflection exception</string>
     <string name="students_controller">Students controller</string>
     <string name="transport_error">Transport error</string>
 </resources>

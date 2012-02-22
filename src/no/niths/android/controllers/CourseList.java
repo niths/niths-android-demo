@@ -23,13 +23,13 @@ public class CourseList extends DomainList<Course> {
         super.configure();
 
         lw.setOnItemClickListener(new OnItemClickListener() {
-            
+
             /**
              * Called when an element in the list is clicked
              */
             public void onItemClick(AdapterView<?> adapter, View view,int index,
                     long id) {
-                
+
                 Intent intent = new Intent(CourseList.this, CourseView.class);
                 intent.putExtra("class", list.get(index));
                 startActivity(intent);

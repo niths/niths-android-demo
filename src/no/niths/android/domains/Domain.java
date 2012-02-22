@@ -1,11 +1,16 @@
 package no.niths.android.domains;
 
+/**
+ * 
+ * @author NITHs
+ *
+ */
 public abstract class Domain {
     private Long id;
 
     private String name;
 
-    private Long getId() {
+    public Long getId() {
         return id;
     }
 
