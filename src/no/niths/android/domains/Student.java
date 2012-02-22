@@ -47,6 +47,6 @@ public class Student extends Domain {
 
     @Override
     public String toString() {
-        return firstName + lastName;
+        return firstName + " " + lastName;
     }
 }

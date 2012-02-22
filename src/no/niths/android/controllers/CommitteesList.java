@@ -2,8 +2,8 @@ package no.niths.android.controllers;
 
 import no.niths.android.R;
 import no.niths.android.config.ServerURL;
-import no.niths.android.controllers.domain_views.EventView;
-import no.niths.android.domains.Event;
+import no.niths.android.controllers.domain_views.CommitteeView;
+import no.niths.android.domains.Committee;
 
 import org.springframework.web.client.RestClientException;
 
@@ -19,7 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * @author NITHs
  *
  */
-public class EventsList extends DomainList<Event> {
+public class CommitteesList extends DomainList<Committee> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class EventsList extends DomainList<Event> {
             public void onItemClick(AdapterView<?> adapter, View view,int index,
                     long id) {
 
-                Intent intent = new Intent(EventsList.this, EventView.class);
+                Intent intent = new Intent(CommitteesList.this, CommitteeView.class);
                 intent.putExtra("class", list.get(index));
                 startActivity(intent);
             }
@@ -51,8 +51,8 @@ public class EventsList extends DomainList<Event> {
     private void fetchData() {
         try {
             tempData = rest.getForObject(
-                    buildURL(ServerURL.LOCAL_URL, Event.class),
-                    Event[].class);
+                    buildURL(ServerURL.LOCAL_URL, Committee.class),
+                    Committee[].class);
         } catch (RestClientException e) {
             Log.e(getString(R.string.connection_error), e.getMessage());
         }

@@ -25,6 +25,10 @@
         <activity
             android:name=".enterance.MainMenu"/>
         <activity
+            android:name=".controllers.CommitteesList"/>
+        <activity
+            android:name=".controllers.domain_views.CommitteeView"/>
+        <activity
             android:name=".controllers.CoursesList"/>
         <activity
             android:name=".controllers.domain_views.CourseView"/>
@@ -34,6 +38,10 @@
             android:name=".controllers.domain_views.EventView"/>
         <activity
             android:name=".controllers.StudentsList"/>
+        <activity
+            android:name=".controllers.SubjectsList"/>
+        <activity
+            android:name=".controllers.domain_views.SubjectView"/>
         <activity
             android:name=".controllers.domain_views.StudentView"/>
     </application>

@@ -1,6 +1,9 @@
 package no.niths.android.enterance;
 
+import javax.security.auth.Subject;
+
 import no.niths.android.R;
+import no.niths.android.domains.Committee;
 import no.niths.android.domains.Course;
 import no.niths.android.domains.Event;
 import no.niths.android.domains.Student;
@@ -28,9 +31,11 @@ public class MainMenu extends ListActivity {
         super.onCreate(savedInstanceState);
 
         final String[] choices = {
+                getSimpleName(Committee.class),
                 getSimpleName(Course.class),
                 getSimpleName(Event.class),
-                getSimpleName(Student.class) };
+                getSimpleName(Student.class),
+                getSimpleName(Subject.class) };
         
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, choices);

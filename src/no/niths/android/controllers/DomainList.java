@@ -36,8 +36,10 @@ public abstract class DomainList<Domain> extends DomainController {
     protected void applyDataToList() {
         list.clear();
 
-        for (Domain domain : tempData) {
-            list.add(domain);
+        if (tempData != null) {
+            for (Domain domain : tempData) {
+                list.add(domain);
+            }
         }
     }
 }
