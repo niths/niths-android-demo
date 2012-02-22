@@ -1,6 +1,6 @@
 package no.niths.android.controllers;
 
-import no.niths.android.config.ServerURL;
+import no.niths.android.config.ServerConfig;
 import no.niths.android.controllers.domain_views.CourseView;
 import no.niths.android.domains.Course;
 import android.content.Intent;
@@ -45,7 +45,7 @@ public class CourseList extends DomainList<Course> {
      */
     private void fetchData() {
         tempData = rest.getForObject(
-                buildURL(ServerURL.LOCAL_URL, Course.class),
+                buildURL(ServerConfig.LOCAL_URL, Course.class),
                 Course[].class);
     }
 }

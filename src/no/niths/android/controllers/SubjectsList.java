@@ -3,7 +3,7 @@ package no.niths.android.controllers;
 import org.springframework.web.client.RestClientException;
 
 import no.niths.android.R;
-import no.niths.android.config.ServerURL;
+import no.niths.android.config.ServerConfig;
 import no.niths.android.controllers.domain_views.SubjectView;
 import no.niths.android.domains.Subject;
 import android.content.Intent;
@@ -50,7 +50,7 @@ public class SubjectsList extends DomainList<Subject> {
     private void fetchData() {
         try {
             tempData = rest.getForObject(
-                    buildURL(ServerURL.LOCAL_URL, Subject.class),
+                    buildURL(ServerConfig.LOCAL_URL, Subject.class),
                     Subject[].class);
         } catch (RestClientException e) {
             Log.e(getString(R.string.connection_error), e.getMessage());

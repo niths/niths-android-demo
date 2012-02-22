@@ -1,7 +1,7 @@
 package no.niths.android.controllers;
 
 import no.niths.android.R;
-import no.niths.android.config.ServerURL;
+import no.niths.android.config.ServerConfig;
 import no.niths.android.controllers.domain_views.EventView;
 import no.niths.android.domains.Event;
 
@@ -51,7 +51,7 @@ public class EventsList extends DomainList<Event> {
     private void fetchData() {
         try {
             tempData = rest.getForObject(
-                    buildURL(ServerURL.LOCAL_URL, Event.class),
+                    buildURL(ServerConfig.LOCAL_URL, Event.class),
                     Event[].class);
         } catch (RestClientException e) {
             Log.e(getString(R.string.connection_error), e.getMessage());

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.niths.android.R;
+import no.niths.android.config.ServerConfig;
 import no.niths.android.exceptions.NoNITHMailFoundException;
 
 import org.apache.http.NameValuePair;
@@ -15,6 +16,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -233,8 +237,19 @@ public class Main extends Activity {
      * @param String the token to be sent
      */
     private void sendToken(final String token) {
-        HttpClient client = new DefaultHttpClient();
+
+        // Timeout parameters
+        HttpParams httpParameters = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParameters,
+                ServerConfig.CONNECTION_TIMEOUT.getTimeout());
+        HttpConnectionParams.setSoTimeout(httpParameters,
+                ServerConfig.SO_TIMEOUT.getTimeout());
+
+        // The client itself
+        HttpClient client = new DefaultHttpClient(httpParameters);
         HttpPost post = new HttpPost(SERVER_URL);
+
+        // The token to be sent
         List<NameValuePair> data = new ArrayList<NameValuePair>();
         data.add(new BasicNameValuePair(TOKEN_FIELD, token)); 
 

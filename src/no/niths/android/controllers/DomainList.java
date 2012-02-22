@@ -2,7 +2,7 @@ package no.niths.android.controllers;
 
 import java.util.ArrayList;
 
-import no.niths.android.config.ServerURL;
+import no.niths.android.config.ServerConfig;
 import no.niths.android.controllers.adapters.IndexListAdapter;
 
 public abstract class DomainList<Domain> extends DomainController {
@@ -22,11 +22,11 @@ public abstract class DomainList<Domain> extends DomainController {
 
     /**
      * 
-     * @param ServerURL The URL
+     * @param ServerConfig The URL
      * @param The class to be fetched
      * @return String the 
      */
-    protected String buildURL(ServerURL serverInfo, Class<?> clazz) {
+    protected String buildURL(ServerConfig serverInfo, Class<?> clazz) {
         return serverInfo + clazz.getSimpleName().toLowerCase() + 's';
     }
 
