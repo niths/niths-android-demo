@@ -12,5 +12,9 @@ public interface Fetchable<T> {
      */
     void fetchAll();
 
+    /**
+     * 
+     * @param t
+     */
     void setData(T[] t);
 }

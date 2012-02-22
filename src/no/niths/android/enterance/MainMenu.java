@@ -1,5 +1,6 @@
 package no.niths.android.enterance;
 
+import no.niths.android.controllers.CourseList;
 import no.niths.android.domains.Course;
 import no.niths.android.domains.Student;
 import android.app.ListActivity;
@@ -38,17 +39,14 @@ public class MainMenu extends ListActivity {
         lw.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View arg1,
                     int index, long id) {
-                try {
-
-                    // Finds and launches the intent class dynamically
-                    Class<?> clazz = Class.forName(
-                            MANAGER_PACKAGE + choises[index] +
-                            CONTROLLER_POSTFIX);
-                    startActivity(new Intent(MainMenu.this, clazz));
-                } catch (ClassNotFoundException e) {
-                    Log.e("sddsa", e.getMessage());
-                    // Do nothing
-                }
+                startActivity(new Intent(MainMenu.this, CourseList.class));
+                /*
+                // Finds and launches the intent class dynamically
+                Class<?> clazz = Class.forName(
+                        MANAGER_PACKAGE + choises[index] +
+                        CONTROLLER_POSTFIX);
+                startActivity(new Intent(MainMenu.this, clazz));
+                */
             }
         });
     }

@@ -30,6 +30,8 @@
             android:name=".controllers.CoursesController"
             android:label="@string/courses_controller"/>
         <activity
+            android:name=".controllers.CourseList"/>
+        <activity
             android:name=".controllers.StudentsController"
             android:label="@string/students_controller"/>
     </application>
