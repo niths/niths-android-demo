@@ -1,11 +1,10 @@
 package no.niths.android.controllers;
 
-import no.niths.android.config.ServerInfo;
+import no.niths.android.config.ServerURL;
 import no.niths.android.controllers.domain_views.CourseView;
 import no.niths.android.domains.Course;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -24,6 +23,10 @@ public class CourseList extends DomainList<Course> {
         super.configure();
 
         lw.setOnItemClickListener(new OnItemClickListener() {
+            
+            /**
+             * Called when an element in the list is clicked
+             */
             public void onItemClick(AdapterView<?> adapter, View view,int index,
                     long id) {
                 startActivity(new Intent(CourseList.this, CourseView.class));
@@ -31,24 +34,15 @@ public class CourseList extends DomainList<Course> {
         });
 
         fetchData();
+        applyDataToList();
     }
 
+    /**
+     * Fetches the data from the server and marshals the incoming data
+     */
     private void fetchData() {
-        Course[] courses = null;
-        try {courses = rest.getForObject(
-                ServerInfo.LOCAL_URL +
-                Course.class.getSimpleName().toLowerCase() + 's',
+        tempData = rest.getForObject(
+                buildURL(ServerURL.LOCAL_URL, Course.class),
                 Course[].class);
-        Log.i("URL", ServerInfo.LOCAL_URL +
-                Course.class.getSimpleName().toLowerCase() + 's');
-        
-        } catch (Exception e) {
-            Log.e("errr", "is "+e.getMessage());
-        }
-
-        list.clear();
-        for (Course course : courses) {
-            list.add(course);
-        }
     }
 }
