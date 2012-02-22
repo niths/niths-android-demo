@@ -1,11 +1,14 @@
 package no.niths.android.domains;
 
-import java.io.Serializable;
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+/**
+ * 
+ * @author NITHs
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Course extends Domain implements Serializable {
+public class Course extends Domain {
     private Long id;
 
     private String name;
@@ -38,12 +41,6 @@ public class Course extends Domain implements Serializable {
         return description;
     }
 
-    @Override
-    public String getInformation() {
-        return String.format("%d\n%s\n%s",
-                id, name, description);
-    }
-    
     @Override
     public String toString() {
         return name;

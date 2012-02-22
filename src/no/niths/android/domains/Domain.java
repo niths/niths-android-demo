@@ -1,11 +1,13 @@
 package no.niths.android.domains;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author NITHs
  *
  */
-public abstract class Domain {
+public abstract class Domain implements Serializable {
     private Long id;
 
     private String name;
@@ -16,9 +18,5 @@ public abstract class Domain {
 
     public String getName() {
         return name;
-    }
-
-    public String getInformation() {
-        return String.format("%d\n%s", id, name);
     }
 }

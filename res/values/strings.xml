@@ -5,6 +5,7 @@
     <string name="authenticate">Authenticate</string>
     <string name="choose_account">Choose account</string>
     <string name="connection_error">Connection error</string>
+    <string name="corrupt_data">Corrupt app data</string>
     <string name="courses_controller">Courses controller</string>
     <string name="email_error">
         Error authenticating email, please check your notifications

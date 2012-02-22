@@ -15,8 +15,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name=".enterance.Main"
-            android:label="@string/app_name" >
+            android:name=".enterance.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,14 +23,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".enterance.MainMenu"
-            android:label="@string/main_menu"/>
+            android:name=".enterance.MainMenu"/>
         <activity
-            android:name=".controllers.CourseList"/>
+            android:name=".controllers.CoursesList"/>
         <activity
             android:name=".controllers.domain_views.CourseView"/>
         <activity
-            android:name=".controllers.StudentsController"
-            android:label="@string/students_controller"/>
+            android:name=".controllers.EventsList"/>
+        <activity
+            android:name=".controllers.domain_views.EventView"/>
+        <activity
+            android:name=".controllers.StudentsController"/>
     </application>
 </manifest>
