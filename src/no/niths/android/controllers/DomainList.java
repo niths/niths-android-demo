@@ -30,6 +30,9 @@ public abstract class DomainList<Domain> extends DomainController {
         return serverInfo + clazz.getSimpleName().toLowerCase() + 's';
     }
 
+    /**
+     * Populates the list with the data fetched
+     */
     protected void applyDataToList() {
         list.clear();
 

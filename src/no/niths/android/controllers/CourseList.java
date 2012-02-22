@@ -29,7 +29,10 @@ public class CourseList extends DomainList<Course> {
              */
             public void onItemClick(AdapterView<?> adapter, View view,int index,
                     long id) {
-                startActivity(new Intent(CourseList.this, CourseView.class));
+                
+                Intent intent = new Intent(CourseList.this, CourseView.class);
+                intent.putExtra("class", list.get(index));
+                startActivity(intent);
             }
         });
 

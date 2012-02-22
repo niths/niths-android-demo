@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
 
 public class CourseView extends DomainAttributesList {
 
@@ -17,13 +16,16 @@ public class CourseView extends DomainAttributesList {
         super.onCreate(savedInstanceState);
         context = this;
         super.configure();
+        adapter.setDomain((Course) getIntent().getSerializableExtra("class"));
 
         lw.setOnItemClickListener(new OnItemClickListener() {
 
+            /**
+             * Called when an element in the list is clicked
+             */
             public void onItemClick(AdapterView<?> adapter, View view,
                     int index, long id) {
-                Toast.makeText(CourseView.this, "foo", Toast.LENGTH_LONG).show();
-                // TODO show
+                // TODO Show CRUD dialog
             }
         });
 

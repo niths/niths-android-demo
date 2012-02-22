@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import no.niths.android.controllers.DomainController;
-import no.niths.android.controllers.adapters.IndexListAdapter;
 import no.niths.android.controllers.domain_views.IndexAttibuteAdapter;
 
 public abstract class DomainAttributesList extends DomainController {
