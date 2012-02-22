@@ -27,10 +27,9 @@
             android:name=".enterance.MainMenu"
             android:label="@string/main_menu"/>
         <activity
-            android:name=".controllers.CoursesController"
-            android:label="@string/courses_controller"/>
-        <activity
             android:name=".controllers.CourseList"/>
+        <activity
+            android:name=".controllers.domain_views.CourseView"/>
         <activity
             android:name=".controllers.StudentsController"
             android:label="@string/students_controller"/>

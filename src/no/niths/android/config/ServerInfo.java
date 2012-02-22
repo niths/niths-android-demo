@@ -6,7 +6,7 @@ package no.niths.android.config;
  *
  */
 public enum ServerInfo {
-    LOCAL_URL("http://10.0.2.2:8080/niths"),
+    LOCAL_URL("http://10.0.2.2:8080/niths/"),
     NITHS_URL("");
 
     private String data;

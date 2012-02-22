@@ -1,7 +1,9 @@
 package no.niths.android.controllers;
 
 import no.niths.android.config.ServerInfo;
+import no.niths.android.controllers.domain_views.CourseView;
 import no.niths.android.domains.Course;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +26,7 @@ public class CourseList extends DomainList<Course> {
         lw.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View view,int index,
                     long id) {
-                displayInformation(list.get(index).getInformation());
+                startActivity(new Intent(CourseList.this, CourseView.class));
             }
         });
 
@@ -34,7 +36,12 @@ public class CourseList extends DomainList<Course> {
     private void fetchData() {
         Course[] courses = null;
         try {courses = rest.getForObject(
-                ServerInfo.LOCAL_URL + Course.PATH, Course[].class);
+                ServerInfo.LOCAL_URL +
+                Course.class.getSimpleName().toLowerCase() + 's',
+                Course[].class);
+        Log.i("URL", ServerInfo.LOCAL_URL +
+                Course.class.getSimpleName().toLowerCase() + 's');
+        
         } catch (Exception e) {
             Log.e("errr", "is "+e.getMessage());
         }
