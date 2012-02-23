@@ -44,8 +44,8 @@ public class CourseList extends DomainList<Course> {
      * Fetches the data from the server and marshals the incoming data
      */
     private void fetchData() {
-        tempData = rest.getForObject(
-                buildURL(ServerConfig.LOCAL_URL, Course.class),
-                Course[].class);
+//        tempData = rest.getForObject(
+//                buildURL(ServerConfig.LOCAL_URL, Course.class),
+//                Course[].class);
     }
 }

@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.niths.android.R;
+import no.niths.android.common.AppController;
 import no.niths.android.config.ServerConfig;
+import no.niths.android.config.TokenConfig;
 import no.niths.android.exceptions.NoNITHMailFoundException;
 
 import org.apache.http.NameValuePair;
@@ -68,11 +70,6 @@ public class Main extends Activity {
     private final String TOKEN_FIELD = "token";
 
     /**
-     * 
-     */
-    private String token;
-
-    /**
      * @param Bundle the bundle which was provided through this method
      * 
      */
@@ -103,7 +100,7 @@ public class Main extends Activity {
             public void onClick(View view) {
                 try {
                     if (checkAccounts(googleAccountManager.getAccounts())) {
-                        getToken();
+                        processToken();
                     }
                 } catch (NoNITHMailFoundException e) {
                     Log.e(getString(R.string.no_nith_email), e.getMessage());
@@ -162,7 +159,7 @@ public class Main extends Activity {
                 for (String accountName : nithAccountNames) {
                     if (accountName.equals(nithAccountNames[which])) {
                         account = nithAccounts.get(which);
-                        getToken();
+                        processToken();
                     }
                 }
             }
@@ -172,13 +169,32 @@ public class Main extends Activity {
     }
 
     private void refreshToken() {
-        try {
+        try { 
             resource.refreshToken();
         } catch (IOException e) {
         }
-        googleAccountManager.invalidateAuthToken(
-                "1/E1hR9cefyH2Kk-yWmo1ViWm9OSmsihiKWbD9r3c3Js4");
+        googleAccountManager.invalidateAuthToken(AppController.token);
         
+    }
+
+    private void processToken() {
+        getToken();
+        getToken(); // Make sure it is the newest
+        sendToken();
+
+        if (AppController.token != null) {
+
+            // TODO Remove ASAP
+            Log.i(TokenConfig.HEADER_NAME.toString(), AppController.token);
+
+            // Sends the user to the main menu
+            startActivity(
+                    new Intent(Main.this, MainMenu.class));
+        } else {
+            Toast.makeText(Main.this,
+                    R.string.email_error,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -212,22 +228,7 @@ public class Main extends Activity {
                         e.getMessage());
             }
 
-            token = resource.getAccessToken();
-
-            if (token == null) {
-                Toast.makeText(Main.this,
-                        R.string.email_error,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                // TODO Remove ASAP
-                Log.i("token:", token);
-
-                sendToken(token);
-
-                // Sends the user to the main menu
-                startActivity(
-                        new Intent(Main.this, MainMenu.class));
-            }            
+            AppController.token = resource.getAccessToken();
         }
         
     };
@@ -236,7 +237,7 @@ public class Main extends Activity {
      * Sends the token to the server
      * @param String the token to be sent
      */
-    private void sendToken(final String token) {
+    private void sendToken() {
 
         // Timeout parameters
         HttpParams httpParameters = new BasicHttpParams();
@@ -251,7 +252,7 @@ public class Main extends Activity {
 
         // The token to be sent
         List<NameValuePair> data = new ArrayList<NameValuePair>();
-        data.add(new BasicNameValuePair(TOKEN_FIELD, token)); 
+        data.add(new BasicNameValuePair(TOKEN_FIELD, AppController.token)); 
 
         try {
             post.setEntity(new UrlEncodedFormEntity(data));

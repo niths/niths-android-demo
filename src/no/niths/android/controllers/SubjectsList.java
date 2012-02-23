@@ -48,12 +48,12 @@ public class SubjectsList extends DomainList<Subject> {
      * Fetches the data from the server and marshals the incoming data
      */
     private void fetchData() {
-        try {
-            tempData = rest.getForObject(
-                    buildURL(ServerConfig.LOCAL_URL, Subject.class),
-                    Subject[].class);
-        } catch (RestClientException e) {
-            Log.e(getString(R.string.connection_error), e.getMessage());
-        }
+//        try {
+//            tempData = rest.getForObject(
+//                    buildURL(ServerConfig.LOCAL_URL, Subject.class),
+//                    Subject[].class);
+//        } catch (RestClientException e) {
+//            Log.e(getString(R.string.connection_error), e.getMessage());
+//        }
     }
 }

@@ -1,10 +1,14 @@
 package no.niths.android.controllers;
 
 import no.niths.android.R;
+import no.niths.android.common.AppController;
 import no.niths.android.config.ServerConfig;
+import no.niths.android.config.TokenConfig;
 import no.niths.android.controllers.domain_views.CourseView;
 import no.niths.android.domains.Course;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestClientException;
 
 import android.content.Intent;
@@ -49,12 +53,21 @@ public class CoursesList extends DomainList<Course> {
      * Fetches the data from the server and marshals the incoming data
      */
     private void fetchData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TokenConfig.HEADER_NAME.toString(), AppController.token);
+        
         try {
-            tempData = rest.getForObject(
-                    buildURL(ServerConfig.LOCAL_URL, Course.class),
-                    Course[].class);
+            tempData = rest.exchange(buildURL(ServerConfig.LOCAL_URL, Course.class), HttpMethod.GET, null, Course[].class);
         } catch (RestClientException e) {
             Log.e(getString(R.string.connection_error), e.getMessage());
+            e.printStackTrace();
         }
+//        try {
+//            tempData = rest.getForObject(
+//                    buildURL(ServerConfig.LOCAL_URL, Course.class),
+//                    Course[].class);
+//        } catch (RestClientException e) {
+//            Log.e(getString(R.string.connection_error), e.getMessage());
+//        }
     }
 }

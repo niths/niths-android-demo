@@ -47,7 +47,8 @@ public class MainMenu extends ListActivity {
                     int index, long id) {
                 try {
                     startActivity(new Intent(MainMenu.this, Class.forName(
-                            MANAGER_PACKAGE + choices[index] + CONTROLLER_POSTFIX)));
+                            MANAGER_PACKAGE + choices[index] +
+                            CONTROLLER_POSTFIX)));
                 } catch (ClassNotFoundException e) {
                     Log.e(getString(R.string.corrupt_data), e.getMessage());
                 }

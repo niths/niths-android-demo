@@ -2,13 +2,17 @@ package no.niths.android.controllers;
 
 import java.util.ArrayList;
 
+import org.springframework.http.ResponseEntity;
+
 import no.niths.android.config.ServerConfig;
 import no.niths.android.controllers.adapters.IndexListAdapter;
+import no.niths.android.domains.Committee;
 
 public abstract class DomainList<Domain> extends DomainController {
     protected ArrayList<Domain> list;
     protected IndexListAdapter<?> adapter;
-    protected Domain[] tempData;
+    protected ResponseEntity<Domain[]> tempData;
+    
 
     @Override
     protected void configure() {
@@ -37,7 +41,9 @@ public abstract class DomainList<Domain> extends DomainController {
         list.clear();
 
         if (tempData != null) {
-            for (Domain domain : tempData) {
+            Domain[] domains = tempData.getBody();
+
+            for (Domain domain : domains) {
                 list.add(domain);
             }
         }
