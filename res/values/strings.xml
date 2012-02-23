@@ -16,4 +16,6 @@
     <string name="reflection_error">Reflection exception</string>
     <string name="students_controller">Students controller</string>
     <string name="transport_error">Transport error</string>
+    <string name="waiting">Waiting</string>
+    <string name="waiting_for_auth">Waiting for authentication</string>
 </resources>

@@ -1,37 +1,18 @@
 package no.niths.android.enterance;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 import no.niths.android.R;
 import no.niths.android.common.AppController;
-import no.niths.android.config.ServerConfig;
 import no.niths.android.config.TokenConfig;
 import no.niths.android.exceptions.NoNITHMailFoundException;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
-import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -40,18 +21,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
-
 /**
  * 
  * @author NITHs
  *
  */
 public class Main extends Activity {
-    private GoogleAccessProtectedResource resource;
-    private GoogleAccountManager googleAccountManager;
-    private Account account;
+    private AccountController accountController;
+    private ProgressDialog progressDialog;
+    private int tokenCount;
 
     /**
      * Only the very basic information will be retrieved
@@ -79,13 +57,19 @@ public class Main extends Activity {
         configure();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        tokenCount = 0;
+    }
+
     /**
      * Sets up the handlers
      */
     private void configure() {
         setContentView(R.layout.main);
-        resource = new GoogleAccessProtectedResource(null);
-        googleAccountManager = new GoogleAccountManager(this);
+
+        accountController = new AccountController(this);
 
         Button btnAccountManager = (Button) findViewById(
                 R.id.btnAccountManager);
@@ -99,8 +83,8 @@ public class Main extends Activity {
         btnAuthenticate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 try {
-                    if (checkAccounts(googleAccountManager.getAccounts())) {
-                        processToken();
+                    if (accountController.checkAccounts()) {
+                    processToken();
                     }
                 } catch (NoNITHMailFoundException e) {
                     Log.e(getString(R.string.no_nith_email), e.getMessage());
@@ -111,159 +95,68 @@ public class Main extends Activity {
         });
     }
 
-    /**
-     * Checks the accounts on the device
-     * @param Account[] The account on the device
-     * @return boolean Success
-     * @throws NoNITHMailFoundException
-     */
-    private boolean checkAccounts(Account[] accounts) throws NoNITHMailFoundException {
-        ArrayList<Account> nithAccounts = new ArrayList<Account>();
-        
-        for (Account account : accounts) {
-            if (account.name.matches("^\\w+@nith.no$")) {
-                nithAccounts.add(account);
-            }
-        }
 
-        final int size = nithAccounts.size();
-        boolean success = false;
+    
 
-        if (size > 1) {
-            promptAccount(nithAccounts);
-        } else if (size == 1) {
-            account = nithAccounts.get(0);
-            success = true;
-        } else {
-            throw new NoNITHMailFoundException();
-        }
-        
-        return success;
-    }
+    
 
-    /**
-     * 
-     * @param String[] The accounts to choose from
-     * @return The name which was chosen
-     */
-    public void promptAccount(final ArrayList<Account> nithAccounts) {
-        final String [] nithAccountNames = new String[nithAccounts.size()];
-        for (int i = 0; i < nithAccountNames.length; i++) {
-            nithAccountNames[i] =nithAccounts.get(i).name;
-        }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.choose_account);
-        builder.setItems(nithAccountNames, new OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                for (String accountName : nithAccountNames) {
-                    if (accountName.equals(nithAccountNames[which])) {
-                        account = nithAccounts.get(which);
-                        processToken();
-                    }
-                }
-            }
-        });
-        builder.create(); 
-        builder.show();
-    }
-
-    private void refreshToken() {
-        try { 
-            resource.refreshToken();
-        } catch (IOException e) {
-        }
-        googleAccountManager.invalidateAuthToken(AppController.token);
-        
-    }
 
     private void processToken() {
+        progressDialog = ProgressDialog.show(this, getString(R.string.waiting),
+                getString(R.string.waiting_for_auth));
         getToken();
-        getToken(); // Make sure it is the newest
-        sendToken();
-
-        if (AppController.token != null) {
-
-            // TODO Remove ASAP
-            Log.i(TokenConfig.HEADER_NAME.toString(), AppController.token);
-
-            // Sends the user to the main menu
-            startActivity(
-                    new Intent(Main.this, MainMenu.class));
-        } else {
-            Toast.makeText(Main.this,
-                    R.string.email_error,
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
     /**
      * Gets the token from Google
      */
     private void getToken() {
-        refreshToken();
-        googleAccountManager.manager.getAuthToken(account, AUTH_TYPE, true,
-                callback, null);
+        accountController.refreshToken();
+
+        accountController.getAccountManager().getAuthToken(
+                accountController.getAccount(), AUTH_TYPE, true,
+                new AccountManagerCallback<Bundle>() {
+
+            public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                    accountController.setAccessToken(
+                            future.getResult().getString(
+                                    AccountManager.KEY_AUTHTOKEN));
+                } catch (OperationCanceledException e) {
+                    Log.e(getString(R.string.transport_error),
+                            e.getMessage());
+                } catch (AuthenticatorException e) {
+                    Log.e(getString(R.string.transport_error),
+                            e.getMessage());
+                } catch (IOException e) {
+                    Log.e(getString(R.string.transport_error),
+                            e.getMessage());
+                }
+
+                // Call this again after callback to ensure the newest token
+                // is fetched
+                getToken();
+
+                if (++tokenCount == 2) {
+                    processPostAction();
+                }
+            }
+            
+        }, null);
     }
 
     /**
-     * Callback when getting a token
-     * TODO Check if the token is valid
+     * To do after everything is done
      */
-    private AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
+    private void processPostAction() {
+        progressDialog.dismiss();
 
-        public void run(AccountManagerFuture<Bundle> future) {
-            try {
-                resource.setAccessToken(future.getResult()
-                        .getString(
-                                AccountManager.KEY_AUTHTOKEN));
-            } catch (OperationCanceledException e) {
-                Log.e(getString(R.string.transport_error),
-                        e.getMessage());
-            } catch (AuthenticatorException e) {
-                Log.e(getString(R.string.transport_error),
-                        e.getMessage());
-            } catch (IOException e) {
-                Log.e(getString(R.string.transport_error),
-                        e.getMessage());
-            }
+        // TODO Remove ASAP
+           Log.i(TokenConfig.HEADER_NAME.toString(),
+                   AppController.token);
 
-            AppController.token = resource.getAccessToken();
-        }
-        
-    };
-
-    /**
-     * Sends the token to the server
-     * @param String the token to be sent
-     */
-    private void sendToken() {
-
-        // Timeout parameters
-        HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParameters,
-                ServerConfig.CONNECTION_TIMEOUT.getTimeout());
-        HttpConnectionParams.setSoTimeout(httpParameters,
-                ServerConfig.SO_TIMEOUT.getTimeout());
-
-        // The client itself
-        HttpClient client = new DefaultHttpClient(httpParameters);
-        HttpPost post = new HttpPost(SERVER_URL);
-
-        // The token to be sent
-        List<NameValuePair> data = new ArrayList<NameValuePair>();
-        data.add(new BasicNameValuePair(TOKEN_FIELD, AppController.token)); 
-
-        try {
-            post.setEntity(new UrlEncodedFormEntity(data));
-            client.execute(post);
-
-        } catch (UnsupportedEncodingException e) {
-            Log.e(getString(R.string.transport_error), e.getMessage());
-        } catch (ClientProtocolException e) {
-            Log.e(getString(R.string.transport_error), e.getMessage());
-        } catch (IOException e) {
-            Log.e(getString(R.string.transport_error), e.getMessage());
-        }
+           // Sends the user to the main menu
+           startActivity(new Intent(Main.this, MainMenu.class));
     }
 }
