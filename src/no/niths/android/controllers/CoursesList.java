@@ -53,21 +53,15 @@ public class CoursesList extends DomainList<Course> {
      * Fetches the data from the server and marshals the incoming data
      */
     private void fetchData() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(TokenConfig.HEADER_NAME.toString(), AppController.token);
-        
         try {
-            tempData = rest.exchange(buildURL(ServerConfig.LOCAL_URL, Course.class), HttpMethod.GET, null, Course[].class);
+            tempData = rest.exchange(
+                    buildURL(ServerConfig.LOCAL_URL, Course.class),
+                    HttpMethod.GET,
+                    null,
+                    Course[].class);
+
         } catch (RestClientException e) {
             Log.e(getString(R.string.connection_error), e.getMessage());
-            e.printStackTrace();
         }
-//        try {
-//            tempData = rest.getForObject(
-//                    buildURL(ServerConfig.LOCAL_URL, Course.class),
-//                    Course[].class);
-//        } catch (RestClientException e) {
-//            Log.e(getString(R.string.connection_error), e.getMessage());
-//        }
     }
 }

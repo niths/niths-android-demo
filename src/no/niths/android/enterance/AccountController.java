@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.util.Log;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
@@ -99,6 +100,7 @@ public class AccountController {
     }
 
     public void setAccessToken(String accessToken) {
+        Log.i("token is", ""+ accessToken);
         googleAccessProtectedResource.setAccessToken(accessToken);
         AppController.token = accessToken;
     }

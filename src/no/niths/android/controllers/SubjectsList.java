@@ -1,10 +1,12 @@
 package no.niths.android.controllers;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestClientException;
 
 import no.niths.android.R;
 import no.niths.android.config.ServerConfig;
 import no.niths.android.controllers.domain_views.SubjectView;
+import no.niths.android.domains.Course;
 import no.niths.android.domains.Subject;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,12 +50,15 @@ public class SubjectsList extends DomainList<Subject> {
      * Fetches the data from the server and marshals the incoming data
      */
     private void fetchData() {
-//        try {
-//            tempData = rest.getForObject(
-//                    buildURL(ServerConfig.LOCAL_URL, Subject.class),
-//                    Subject[].class);
-//        } catch (RestClientException e) {
-//            Log.e(getString(R.string.connection_error), e.getMessage());
-//        }
+        try {
+            tempData = rest.exchange(
+                    buildURL(ServerConfig.LOCAL_URL, Subject.class),
+                    HttpMethod.GET,
+                    null,
+                    Subject[].class);
+
+        } catch (RestClientException e) {
+            Log.e(getString(R.string.connection_error), e.getMessage());
+        }
     }
 }

@@ -32,17 +32,6 @@ public class Main extends Activity {
     private int tokenCount;
 
     /**
-     * Only the very basic information will be retrieved
-     */
-    private final String AUTH_TYPE=
-            "oauth2:https://www.googleapis.com/auth/userinfo.email",
-
-            /**
-             * The URL which will handle the token sent 
-             */
-            SERVER_URL = "http://10.0.2.2:8080/niths/google";
-
-    /**
      * The form data token field 
      */
     private final String TOKEN_FIELD = "token";
@@ -95,13 +84,6 @@ public class Main extends Activity {
         });
     }
 
-
-    
-
-    
-
-
-
     private void processToken() {
         progressDialog = ProgressDialog.show(this, getString(R.string.waiting),
                 getString(R.string.waiting_for_auth));
@@ -115,7 +97,9 @@ public class Main extends Activity {
         accountController.refreshToken();
 
         accountController.getAccountManager().getAuthToken(
-                accountController.getAccount(), AUTH_TYPE, true,
+                accountController.getAccount(),
+                TokenConfig.SOURCE.toString(),
+                true,
                 new AccountManagerCallback<Bundle>() {
 
             public void run(AccountManagerFuture<Bundle> future) {
@@ -134,12 +118,10 @@ public class Main extends Activity {
                             e.getMessage());
                 }
 
-                // Call this again after callback to ensure the newest token
-                // is fetched
-                getToken();
-
                 if (++tokenCount == 2) {
                     processPostAction();
+                } else {
+                    getToken();
                 }
             }
             
@@ -153,8 +135,7 @@ public class Main extends Activity {
         progressDialog.dismiss();
 
         // TODO Remove ASAP
-           Log.i(TokenConfig.HEADER_NAME.toString(),
-                   AppController.token);
+           Log.i(TokenConfig.NAME.toString(), AppController.token);
 
            // Sends the user to the main menu
            startActivity(new Intent(Main.this, MainMenu.class));

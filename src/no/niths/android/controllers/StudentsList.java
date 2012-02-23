@@ -3,8 +3,10 @@ package no.niths.android.controllers;
 import no.niths.android.R;
 import no.niths.android.config.ServerConfig;
 import no.niths.android.controllers.domain_views.StudentView;
+import no.niths.android.domains.Course;
 import no.niths.android.domains.Student;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestClientException;
 
 import android.content.Intent;
@@ -49,12 +51,15 @@ public class StudentsList extends DomainList<Student> {
      * Fetches the data from the server and marshals the incoming data
      */
     private void fetchData() {
-//        try {
-//            tempData = rest.getForObject(
-//                    buildURL(ServerConfig.LOCAL_URL, Student.class),
-//                    Student[].class);
-//        } catch (RestClientException e) {
-//            Log.e(getString(R.string.connection_error), e.getMessage());
-//        }
+        try {
+            tempData = rest.exchange(
+                    buildURL(ServerConfig.LOCAL_URL, Student.class),
+                    HttpMethod.GET,
+                    null,
+                    Student[].class);
+
+        } catch (RestClientException e) {
+            Log.e(getString(R.string.connection_error), e.getMessage());
+        }
     }
 }

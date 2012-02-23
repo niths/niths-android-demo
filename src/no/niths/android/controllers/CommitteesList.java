@@ -6,6 +6,7 @@ import no.niths.android.config.ServerConfig;
 import no.niths.android.config.TokenConfig;
 import no.niths.android.controllers.domain_views.CommitteeView;
 import no.niths.android.domains.Committee;
+import no.niths.android.domains.Course;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -54,12 +55,13 @@ public class CommitteesList extends DomainList<Committee> {
      * Fetches the data from the server and marshals the incoming data
      */
     private void fetchData() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(TokenConfig.HEADER_NAME.toString(), AppController.token);
-        headers.set("Authorization", "Basic YWRtaW46YWRtaW4=");
-        
         try {
-            tempData = rest.exchange(buildURL(ServerConfig.LOCAL_URL, Committee.class), HttpMethod.GET, new HttpEntity<Committee>(headers), Committee[].class);
+            tempData = rest.exchange(
+                    buildURL(ServerConfig.LOCAL_URL, Committee.class),
+                    HttpMethod.GET,
+                    null,
+                    Committee[].class);
+
         } catch (RestClientException e) {
             Log.e(getString(R.string.connection_error), e.getMessage());
         }
