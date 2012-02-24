@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import no.niths.android.R;
 import no.niths.android.common.AppController;
+import no.niths.android.common.ErrorHandler;
 import no.niths.android.config.TokenConfig;
 import no.niths.android.exceptions.NoNITHMailFoundException;
 import android.accounts.AccountManager;
@@ -30,11 +31,6 @@ public class Main extends Activity {
     private AccountController accountController;
     private ProgressDialog progressDialog;
     private int tokenCount;
-
-    /**
-     * The form data token field 
-     */
-    private final String TOKEN_FIELD = "token";
 
     /**
      * @param Bundle the bundle which was provided through this method
@@ -72,8 +68,9 @@ public class Main extends Activity {
         btnAuthenticate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 try {
-                    if (accountController.checkAccounts()) {
-                    processToken();
+                    if (accountController.checkAccounts() &&
+                            accountController.getAccount() != null ) {
+                        processToken();
                     }
                 } catch (NoNITHMailFoundException e) {
                     Log.e(getString(R.string.no_nith_email), e.getMessage());
@@ -134,10 +131,15 @@ public class Main extends Activity {
     private void processPostAction() {
         progressDialog.dismiss();
 
+        if (AppController.token != null) {
         // TODO Remove ASAP
            Log.i(TokenConfig.NAME.toString(), AppController.token);
 
            // Sends the user to the main menu
            startActivity(new Intent(Main.this, MainMenu.class));
+        } else {
+            ErrorHandler.log(this, R.string.email_error,
+                    getString(R.string.email_error));
+        }
     }
 }

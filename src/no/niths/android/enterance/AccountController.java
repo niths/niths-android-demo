@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.extensions.android2.auth.GoogleAccountManager;
@@ -29,6 +30,7 @@ public class AccountController {
     private Account account;
 
     public AccountController(Context context) {
+        this.context = context;
         googleAccessProtectedResource =
                 new GoogleAccessProtectedResource(null);
         googleAccountManager = new GoogleAccountManager(context);
@@ -53,7 +55,9 @@ public class AccountController {
         final int size = nithAccounts.size();
         boolean success = false;
 
-        if (size > 1) {
+        if (account != null) {
+            success = true;
+        } else if (size > 1) {
             promptAccount(nithAccounts);
         } else if (size == 1) {
             account = nithAccounts.get(0);
@@ -91,6 +95,9 @@ public class AccountController {
                 for (String accountName : nithAccountNames) {
                     if (accountName.equals(nithAccountNames[which])) {
                         account = nithAccounts.get(which);
+                        Toast.makeText(context, context.getString(
+                                R.string.account_chosen),
+                                Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -100,7 +107,6 @@ public class AccountController {
     }
 
     public void setAccessToken(String accessToken) {
-        Log.i("token is", ""+ accessToken);
         googleAccessProtectedResource.setAccessToken(accessToken);
         AppController.token = accessToken;
     }
