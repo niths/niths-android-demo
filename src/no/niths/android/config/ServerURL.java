@@ -17,14 +17,15 @@ public enum ServerURL {
      */
     NITHS_URL("http://ec2-46-137-44-111.eu-west-1.compute.amazonaws.com:8181/niths/");
 
-    private String data;
+    private String url;
 
-    ServerURL(String data) {
-        this.data = data;
+
+    ServerURL(String url) {
+        this.url = url;
     }
 
     @Override
     public String toString() {
-        return data;
+        return url;
     }
 }

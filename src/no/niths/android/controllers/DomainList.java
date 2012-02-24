@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
 
-import no.niths.android.config.ServerConfig;
+import no.niths.android.config.ServerURL;
 import no.niths.android.controllers.adapters.IndexListAdapter;
 import no.niths.android.domains.Committee;
 
@@ -26,11 +26,11 @@ public abstract class DomainList<Domain> extends DomainController {
 
     /**
      * 
-     * @param ServerConfig The URL
+     * @param ServerURL The URL
      * @param The class to be fetched
      * @return String the 
      */
-    protected String buildURL(ServerConfig serverInfo, Class<?> clazz) {
+    protected String buildURL(ServerURL serverInfo, Class<?> clazz) {
         return serverInfo + clazz.getSimpleName().toLowerCase() + 's';
     }
 

@@ -1,7 +1,7 @@
 package no.niths.android.controllers;
 
 import no.niths.android.R;
-import no.niths.android.config.ServerConfig;
+import no.niths.android.config.ServerURL;
 import no.niths.android.controllers.domain_views.EventView;
 import no.niths.android.domains.Course;
 import no.niths.android.domains.Event;
@@ -53,7 +53,7 @@ public class EventsList extends DomainList<Event> {
     private void fetchData() {
         try {
             tempData = rest.exchange(
-                    buildURL(ServerConfig.LOCAL_URL, Event.class),
+                    buildURL(ServerURL.LOCAL_URL, Event.class),
                     HttpMethod.GET,
                     null,
                     Event[].class);

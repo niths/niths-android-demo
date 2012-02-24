@@ -2,7 +2,7 @@ package no.niths.android.controllers;
 
 import no.niths.android.R;
 import no.niths.android.common.AppController;
-import no.niths.android.config.ServerConfig;
+import no.niths.android.config.ServerURL;
 import no.niths.android.config.TokenConfig;
 import no.niths.android.controllers.domain_views.CourseView;
 import no.niths.android.domains.Course;
@@ -55,7 +55,7 @@ public class CoursesList extends DomainList<Course> {
     private void fetchData() {
         try {
             tempData = rest.exchange(
-                    buildURL(ServerConfig.LOCAL_URL, Course.class),
+                    buildURL(ServerURL.LOCAL_URL, Course.class),
                     HttpMethod.GET,
                     null,
                     Course[].class);

@@ -2,7 +2,7 @@ package no.niths.android.controllers;
 
 import no.niths.android.R;
 import no.niths.android.common.AppController;
-import no.niths.android.config.ServerConfig;
+import no.niths.android.config.ServerURL;
 import no.niths.android.config.TokenConfig;
 import no.niths.android.controllers.domain_views.CommitteeView;
 import no.niths.android.domains.Committee;
@@ -57,7 +57,7 @@ public class CommitteesList extends DomainList<Committee> {
     private void fetchData() {
         try {
             tempData = rest.exchange(
-                    buildURL(ServerConfig.LOCAL_URL, Committee.class),
+                    buildURL(ServerURL.LOCAL_URL, Committee.class),
                     HttpMethod.GET,
                     null,
                     Committee[].class);

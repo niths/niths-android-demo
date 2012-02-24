@@ -4,7 +4,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestClientException;
 
 import no.niths.android.R;
-import no.niths.android.config.ServerConfig;
+import no.niths.android.config.ServerURL;
 import no.niths.android.controllers.domain_views.SubjectView;
 import no.niths.android.domains.Course;
 import no.niths.android.domains.Subject;
@@ -52,7 +52,7 @@ public class SubjectsList extends DomainList<Subject> {
     private void fetchData() {
         try {
             tempData = rest.exchange(
-                    buildURL(ServerConfig.LOCAL_URL, Subject.class),
+                    buildURL(ServerURL.LOCAL_URL, Subject.class),
                     HttpMethod.GET,
                     null,
                     Subject[].class);
